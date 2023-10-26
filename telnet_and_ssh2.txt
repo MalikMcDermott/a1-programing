@@ -1,0 +1,76 @@
+import telnetlib
+import paramiko
+
+#importing software so it works
+
+def telnet_to_router(router, user, pass):
+    # connect router with telnet
+
+Arges:
+    router: ip of the router 
+    user: name to login to router
+    pass: password to login to router
+
+Return:
+    # telnet that represents it having a connection to a router 
+
+telnet = telnetlib.telnet(router)
+telnet.read.until(b"user:")
+telnet.write(user.encode("ascii") + b"\n")
+telnet.read.until(b"pass:")
+telnet.write(pass.encode("ascii") + b"\n")
+return telnet
+
+def ssh_to_router(router, user, pass):
+    # connect router with ssh
+
+    Arges:
+    router: ip of the router 
+    user: name to login to router
+    pass: password to login to router
+
+    return:
+     # ssh that represents it having a connection to a router
+
+     ssh = paramiko.SSHClient()
+     ssh.set.missing_key_host_policy(paramiko.AutoAddPolicy())
+     ssh.connect(router, user, pass)
+     return ssh
+
+     def main():
+        """menu system that allows you to pick the telnet or the ssh connection
+
+         return:   
+            None
+        """
+
+        print("pick between the options below")
+        print("1 - telnet)
+        print("2- ssh")
+
+        choice = input("your choice: ")
+
+        if choice = "1"
+            router = input("put the ip address in: ")
+            user = input("put the router name: ")
+            pass = input("enter the password)
+
+         telnet == telnet_to_router(router,user,pass)
+            # loads the telnet connection 
+
+            telnet.close()
+
+        elif choice == "2":
+            router = input("put the ip address in: ")
+            user = input("put the router name: ")
+            pass = input("enter the password)
+
+        ssh = ssh_to_router(router,user,pass)
+            # load the ssh connection
+
+            ssh.close()
+
+        else:
+            print("please select a correct value")
+
+        if__name__== "__main__":
