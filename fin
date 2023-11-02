@@ -8,11 +8,11 @@ def telnet_to_router(router, user, password):
     # Create a Telnet object and connect to the router
     telnet = telnetlib.Telnet(router)
 
-    # Wait for the "Username:" prompt and then send the username
+  
     telnet.read_until(b"Username:")
     telnet.write(user.encode("ascii") + b"\n")
 
-    # Wait for the "Password:" prompt and then send the password
+    
     telnet.read_until(b"Password:")
     telnet.write(password.encode("ascii") + b"\n")
 
@@ -24,7 +24,7 @@ def ssh_to_router(router, user, password):
     # Create an SSH client object
     ssh = paramiko.SSHClient()
 
-    # Automatically add the host key (you might want to add more security checks here)
+    # Automatically add the host key 
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     # Connect to the router via SSH
@@ -33,7 +33,7 @@ def ssh_to_router(router, user, password):
     return ssh
 
 def main():
-    """A menu system that allows you to pick between Telnet and SSH connections"""
+    """ pick between Telnet and SSH connections"""
 
     print("Pick one of the options below:")
     print("1 - Telnet")
@@ -69,53 +69,3 @@ if __name__ == "__main__":
 
 
 
-chat gpt below
-
-
-import telnetlib
-import paramiko
-
-def telnet_to_router(router, user, password):
-    telnet = telnetlib.Telnet(router)
-    telnet.read_until(b"Username:")
-    telnet.write(user.encode("ascii") + b"\n")
-    telnet.read_until(b"Password:")
-    telnet.write(password.encode("ascii") + b"\n")
-    return telnet
-
-def ssh_to_router(router, user, password):
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(router, username=user, password=password)
-    return ssh
-
-def main():
-    print("Pick one of the options below:")
-    print("1 - Telnet")
-    print("2 - SSH")
-
-    choice = input("Your choice: ")
-
-    if choice == "1":
-        router = "192.168.56.101"
-        user = "Cisco"
-        password = "Cisco123"
-
-        telnet = telnet_to_router(router, user, password)
-        # Use the telnet connection here
-        telnet.close()
-
-    elif choice == "2":
-        router = "192.168.56.101"
-        user = "Cisco"
-        password = "Cisco123"
-
-        ssh = ssh_to_router(router, user, password)
-        # Use the SSH connection here
-        ssh.close()
-
-    else:
-        print("Please select a valid option.")
-
-if __name__ == "__main__":
-    main()
