@@ -9,11 +9,9 @@ def telnet_to_router(router, user, password):
     # Create a Telnet object and connect to the router
     telnet = telnetlib.Telnet(router)
 
-  
     telnet.read_until(b"Username:")
     telnet.write(user.encode("ascii") + b"\n")
 
-    
     telnet.read_until(b"Password:")
     telnet.write(password.encode("ascii") + b"\n")
 
@@ -50,24 +48,27 @@ def main():
         telnet = telnet_to_router(router, user, password)
         # Use the telnet connection here
         
-        print('success connecting to ', router)
+        print('Success connecting to ', router)
 
-
-        with  open('Compare-Harden-Advice.txt') as f:
+        with open('Compare-Harden-Advice.txt') as f:
             lines = f.read().splitlines()
-        print (lines)
+        print(lines)
 
         all_devices = [router]
 
-        for devices in all_devices:
-            net_connect = ConnectHandler (**devices)
+        for device in all_devices:
+            net_connect = ConnectHandler(**{
+                'device_type': 'cisco_ios',
+                'ip': device,
+                'username': user,
+                'password': password,
+            })
             output = net_connect.send_config_set(lines)
             print(output)
 
         with open('telnet-and-ssh.py') as f:
             lines = f.read().splitlines()
-        print (lines)
-
+        print(lines)
 
         with open('command.txt') as f:
             commands_list = f.read().splitlines()
@@ -75,18 +76,17 @@ def main():
         with open('devices.txt') as f:
             devices_list = f.read().splitlines()
 
-        for devices in devices_list:
-            print("connecting to roputer" + devices)
-            ip_address_for_device = devices
+        for device in devices_list:
+            print("Connecting to router: " + device)
+            ip_address_for_device = device
             ios_device = {
-                    'device-type': '',
-                    'ip' : ip_address_for_device
-                    'username' : username,
-                    'password' : password
+                'device_type': 'cisco_ios',
+                'ip': ip_address_for_device,
+                'username': user,
+                'password': password
             }
+            # Do something with ios_device
 
-             
-                                              
         telnet.close()
 
     elif choice == "2":
@@ -97,7 +97,7 @@ def main():
         ssh = ssh_to_router(router, user, password)
         # Use the SSH connection here
 
-        print('success connecting to ', router)
+        print('Success connecting to ', router)
 
         ssh.close()
 
