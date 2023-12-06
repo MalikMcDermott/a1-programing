@@ -85,7 +85,11 @@ def main():
                 'username': user,
                 'password': password
             }
-            # Do something with ios_device
+           
+            net_connect = ConnectHandler(**ios_device)
+            output = net_connect.send_config_set(commands_list)
+            print(output)   
+
 
         telnet.close()
 
@@ -106,3 +110,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+ 
