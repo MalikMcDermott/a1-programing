@@ -1,0 +1,7 @@
+en
+configure terminal
+router rip
+ version 2
+ network 192.168.56.0
+exit
+wr
