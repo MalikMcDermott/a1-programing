@@ -31,6 +31,9 @@ def ssh_to_router(router, user, password):
 
     return ssh
 
+def apply_rip_config_telnet(telnet, rip_config):
+    telnet.write(rip_config.encode("ascii") + b"\n")
+
 def main():
     """ pick between Telnet and SSH connections"""
 
@@ -49,6 +52,13 @@ def main():
         # Use the telnet connection here
         
         print('Success connecting to ', router)
+
+     # Read RIP configuration from file
+        with open('rip_config.txt') as f:
+            rip_config = f.read()
+
+        # Apply RIP configuration using Telnet
+        apply_rip_config_telnet(telnet, rip_config)
 
         with open('Compare-Harden-Advice.txt') as f:
             lines = f.read().splitlines()
