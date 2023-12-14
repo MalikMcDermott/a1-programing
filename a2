@@ -88,3 +88,111 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+ chaat gpt
+
+
+import telnetlib
+import paramiko
+import getpass
+from netmiko import ConnectHandler
+
+def telnet_to_router(router, user, password):
+    # Connect to the router using Telnet
+    telnet = telnetlib.Telnet(router)
+
+    telnet.read_until(b"Username:")
+    telnet.write(user.encode("ascii") + b"\n")
+
+    telnet.read_until(b"Password:")
+    telnet.write(password.encode("ascii") + b"\n")
+
+    return telnet
+
+def ssh_to_router(router, user, password):
+    # Connect to the router using SSH
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(router, username=user, password=password)
+    return ssh
+
+def apply_config_to_router(connection, config_lines):
+    # Apply configuration lines to the router using the appropriate connection
+    output = connection.send_config_set(config_lines)
+    print(output)
+
+def main():
+    """Pick between Telnet and SSH connections"""
+
+    print("Pick one of the options below:")
+    print("1 - Telnet")
+    print("2 - SSH")
+
+    choice = input("Your choice: ")
+
+    if choice == "1":
+        router = "192.168.101.56"
+        user = "admin"
+        password = "cisco123"
+
+        telnet = telnet_to_router(router, user, password)
+        print('Success connecting to', router)
+
+        with open('Compare-Harden-Advice.txt') as f:
+            lines = f.read().splitlines()
+
+        all_devices = [router]
+
+        for device in all_devices:
+            net_connect = ConnectHandler(**{
+                'device_type': 'cisco_ios',
+                'ip': device,
+                'username': user,
+                'password': password,
+            })
+
+            # Apply configuration using Telnet
+            apply_config_to_router(net_connect, lines)
+
+            with open('telnet-and-ssh') as f:
+                lines = f.read().splitlines()
+            print(lines)
+
+        telnet.close()
+
+    elif choice == "2":
+        router = "192.168.101.56"
+        user = "admin"
+        password = "cisco123"
+
+        ssh = ssh_to_router(router, user, password)
+        print('Success connecting to', router)
+
+        with open('Compare-Harden-Advice.txt') as f:
+            lines = f.read().splitlines()
+
+        all_devices = [router]
+
+        for device in all_devices:
+            net_connect = ConnectHandler(**{
+                'device_type': 'cisco_ios',
+                'ip': device,
+                'username': user,
+                'password': password,
+            })
+
+            # Apply configuration using SSH
+            apply_config_to_router(net_connect, lines)
+
+            with open('telnet-and-ssh') as f:
+                lines = f.read().splitlines()
+            print(lines)
+
+        ssh.close()
+
+    else:
+        print("Please select a valid option.")
+
+if __name__ == "__main__":
+    main()
